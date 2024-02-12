@@ -14,10 +14,14 @@ class AuthController extends AuthService {
       if (type === "signup") {
         const payload = req.body as ISignupRequest;
         await this.signup(payload);
+
         return res.status(201).json({ message: "User signed up successfully" });
       } else if (type === "login") {
         const loginPayload = req.body as ILoginRequest;
+
         let token: string;
+
+        // * will change with proper validation later
         if (loginPayload.username && !loginPayload.email) {
           token = await this.login("username", loginPayload);
         } else if (loginPayload.email && !loginPayload.username) {
@@ -27,6 +31,7 @@ class AuthController extends AuthService {
             "Can not accept both username and email for login"
           );
         }
+
         return res
           .status(200)
           .json({ message: "User logged in successfully", devOnly: token });
